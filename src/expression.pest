@@ -1,0 +1,10 @@
+root = _{ SOI ~ expr ~ EOI }
+
+expr = { val ~ (op ~ leaf)* }
+
+leaf = _{ "(" ~ expr ~ ")" | val }
+op = { "+" | "-" }
+
+val = { ASCII_DIGIT+ | ASCII_ALPHA+ }
+
+WHITESPACE = _{ " " }

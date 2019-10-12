@@ -1,7 +1,7 @@
 root = _{ SOI ~ expr ~ EOI }
-expr_root = _{ val ~ (op ~ leaf)* }
+expr_root = _{ leaf ~ (op ~ leaf)* }
 
-expr = { val ~ (op ~ leaf)* }
+expr = { leaf ~ (op ~ leaf)* }
 
 leaf = _{ "(" ~ expr ~ ")" | val }
 op = { "+" | "-" }

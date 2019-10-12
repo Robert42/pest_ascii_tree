@@ -101,9 +101,46 @@ mod tests {
                    " ├─ op \"+\"\n" +
                    " └─ val \"z\"\n");
 
-        let result = as_ascii_tree(ExpressionParser::parse(Rule::val, "w").expect("Expected expression to parse")).expect(" Expected ascii tree to build");
+        let result = as_ascii_tree(ExpressionParser::parse(Rule::val, "m").expect("Expected expression to parse")).expect(" Expected ascii tree to build");
         assert_eq!(result,
                    String::new() +
-                   " val \"w\"\n");
+                   " val \"m\"\n");
+
+        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr, "(u + (v + w)) + (x + y) + z").expect("Expected expression to parse")).expect(" Expected ascii tree to build");
+        assert_eq!(result,
+                   String::new() +
+                   " expr\n" +
+                   " ├─ expr\n" +
+                   " │  ├─ val \"u\"\n" +
+                   " │  ├─ op \"+\"\n" +
+                   " │  └─ expr\n" +
+                   " │     ├─ val \"v\"\n" +
+                   " │     ├─ op \"+\"\n" +
+                   " │     └─ val \"w\"\n" +
+                   " ├─ op \"+\"\n" +
+                   " ├─ expr\n" +
+                   " │  ├─ val \"x\"\n" +
+                   " │  ├─ op \"+\"\n" +
+                   " │  └─ val \"y\"\n" +
+                   " ├─ op \"+\"\n" +
+                   " └─ val \"z\"\n");
+
+        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr_root, "(u + (v + w)) + (x + y) + z").expect("Expected expression to parse")).expect(" Expected ascii tree to build");
+        assert_eq!(result,
+                   String::new() +
+                   " ├─ expr\n" +
+                   " │  ├─ val \"u\"\n" +
+                   " │  ├─ op \"+\"\n" +
+                   " │  └─ expr\n" +
+                   " │     ├─ val \"v\"\n" +
+                   " │     ├─ op \"+\"\n" +
+                   " │     └─ val \"w\"\n" +
+                   " ├─ op \"+\"\n" +
+                   " ├─ expr\n" +
+                   " │  ├─ val \"x\"\n" +
+                   " │  ├─ op \"+\"\n" +
+                   " │  └─ val \"y\"\n" +
+                   " ├─ op \"+\"\n" +
+                   " └─ val \"z\"\n");
     }
 }

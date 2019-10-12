@@ -43,6 +43,10 @@ fn as_ascii_tree<R>(pairs: Pairs<R>) -> Result<String, std::fmt::Error> where
         _ => {
             let root = ascii_tree::Tree::Node(String::new(), nodes);
             ascii_tree::write_tree(&mut output, &root)?;
+
+            if output.starts_with(" \n") {
+                output = output.split_off(2);
+            }
         }
     };
 
@@ -91,7 +95,6 @@ mod tests {
         let result = as_ascii_tree(ExpressionParser::parse(Rule::expr_root, "x + y + z").expect("Expected expression to parse")).expect(" Expected ascii tree to build");
         assert_eq!(result,
                    String::new() +
-                   " \n" +
                    " ├─ val \"x\"\n" +
                    " ├─ op \"+\"\n" +
                    " ├─ val \"y\"\n" +

@@ -1,4 +1,5 @@
 root = _{ SOI ~ expr ~ EOI }
+expr_root = _{ val ~ (op ~ leaf)* }
 
 expr = { val ~ (op ~ leaf)* }
 

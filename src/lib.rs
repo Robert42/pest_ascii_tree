@@ -39,11 +39,11 @@ fn as_ascii_tree<R>(pairs: Pairs<R>) -> Result<String, std::fmt::Error> where
 
     match nodes.len() {
         0 => {},
-        1 => {
+        1 => {ascii_tree::write_tree(&mut output, nodes.first().unwrap())?;},
+        _ => {
             let root = ascii_tree::Tree::Node(String::new(), nodes);
             ascii_tree::write_tree(&mut output, &root)?;
-        },
-        _ => {ascii_tree::write_tree(&mut output, nodes.first().unwrap())?;}
+        }
     };
 
     Ok(output)

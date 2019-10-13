@@ -1,3 +1,17 @@
+//! # pest_ascii_tree
+//!
+//! This is a small helper crate useful for quickly debugging your pest
+//! grammar.
+//!
+//! For generating the output, [ascii_tree][1] is used.
+//!
+//! It is useful, you you want to quickly debug your grammar without
+//! having to write specialized code for handling the `Pairs` iterator
+//! returned by your pest parser.
+//!
+//! [1]: https://crates.io/crates/ascii_tree
+
+
 extern crate ascii_tree;
 extern crate pest;
 extern crate escape_string;
@@ -30,6 +44,10 @@ fn as_ascii_tree_nodes<R>(mut pairs: Pairs<R>) -> Vec<ascii_tree::Tree> where
     vec
 }
 
+/// Returns the generated ascii_tree.
+///
+/// # Error
+/// Returns an error, if the internal call to `ascii_tree::write_tree` failed.
 pub fn as_ascii_tree_safely<R>(pairs: Pairs<R>) -> Result<String, std::fmt::Error> where
     R: pest::RuleType {
 
@@ -53,12 +71,26 @@ pub fn as_ascii_tree_safely<R>(pairs: Pairs<R>) -> Result<String, std::fmt::Erro
     Ok(output)
 }
 
+/// Returns the generated ascii_tree.
+///
+/// Thought as a utility function for your tests.
+///
+/// # Panics
+/// Panics, if formating the tree failed.
+/// If you prefer a Result over panicing, use `as_ascii_tree_safely` instead.
 pub fn as_ascii_tree<R>(pairs: Pairs<R>) -> String where
     R: pest::RuleType {
 
     as_ascii_tree_safely(pairs).expect("Could not format ascii tree.")
 }
 
+/// Prints the result returned by your pest Parser.
+///
+/// A potential error is printed to the stderro stream.
+/// Otherwise, an ascii tree is printed using `as_ascii_tree_safely`.
+///
+/// This is a convenience function, as it takes care of handling error.
+/// For writing unittests, I recomment using `as_ascii_tree` instead.
 pub fn print_as_ascii_tree<R>(parsing_result : Result<Pairs<R>, Error<R>>) where
     R: pest::RuleType {
 

@@ -48,7 +48,7 @@ fn as_ascii_tree_nodes<R>(mut pairs: Pairs<R>) -> Vec<ascii_tree::Tree> where
 ///
 /// # Error
 /// Returns an error, if the internal call to `ascii_tree::write_tree` failed.
-pub fn as_ascii_tree_safely<R>(pairs: Pairs<R>) -> Result<String, std::fmt::Error> where
+fn as_ascii_tree_impl<R>(pairs: Pairs<R>) -> Result<String, std::fmt::Error> where
     R: pest::RuleType {
 
     let nodes = as_ascii_tree_nodes(pairs);
@@ -75,28 +75,30 @@ pub fn as_ascii_tree_safely<R>(pairs: Pairs<R>) -> Result<String, std::fmt::Erro
 ///
 /// Thought as a utility function for your tests.
 ///
-/// # Panics
-/// Panics, if formating the tree failed.
-/// If you prefer a Result over panicing, use `as_ascii_tree_safely` instead.
+/// # Error
+/// Returns the error as string if formating the ascii tree failed.
 pub fn as_ascii_tree<R>(pairs: Pairs<R>) -> String where
     R: pest::RuleType {
 
-    as_ascii_tree_safely(pairs).expect("Could not format ascii tree.")
+    match as_ascii_tree_impl(pairs) {
+        Ok(s) => s,
+        Err(e) => format!("{}", e),
+    }
 }
 
 /// Prints the result returned by your pest Parser.
 ///
-/// A potential error is printed to the stderro stream.
-/// Otherwise, an ascii tree is printed using `as_ascii_tree_safely`.
+/// Otherwise, an ascii tree is printed.
+/// In case of an error, the error is printed.
 ///
-/// This is a convenience function, as it takes care of handling error.
+/// This is a convenience function.
 /// For writing unittests, I recomment using `as_ascii_tree` instead.
 pub fn print_as_ascii_tree<R>(parsing_result : Result<Pairs<R>, Error<R>>) where
     R: pest::RuleType {
 
     match parsing_result {
         Ok(pairs) => {
-            match as_ascii_tree_safely(pairs) {
+            match as_ascii_tree_impl(pairs) {
                 Ok(output) => {println!("{}", output);}
                 Err(e) => {eprintln!("{}", e);}
             }

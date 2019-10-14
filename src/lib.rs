@@ -85,23 +85,25 @@ where
 /// ```ignore
 /// let result = pest_ascii_tree::into_ascii_tree(
 ///                  ExpressionParser::parse(Rule::expr, "(u + (v + w)) + (x + y) + z")?)?;
-/// assert_eq!(result,
-///            String::new() +
-///            " expr\n" +
-///            " ├─ expr\n" +
-///            " │  ├─ val \"u\"\n" +
-///            " │  ├─ op \"+\"\n" +
-///            " │  └─ expr\n" +
-///            " │     ├─ val \"v\"\n" +
-///            " │     ├─ op \"+\"\n" +
-///            " │     └─ val \"w\"\n" +
-///            " ├─ op \"+\"\n" +
-///            " ├─ expr\n" +
-///            " │  ├─ val \"x\"\n" +
-///            " │  ├─ op \"+\"\n" +
-///            " │  └─ val \"y\"\n" +
-///            " ├─ op \"+\"\n" +
-///            " └─ val \"z\"\n");
+///     assert_eq!(
+///         result,
+///         String::new()
+///             + " expr\n"
+///             + " ├─ expr\n"
+///             + " │  ├─ val \"u\"\n"
+///             + " │  ├─ op \"+\"\n"
+///             + " │  └─ expr\n"
+///             + " │     ├─ val \"v\"\n"
+///             + " │     ├─ op \"+\"\n"
+///             + " │     └─ val \"w\"\n"
+///             + " ├─ op \"+\"\n"
+///             + " ├─ expr\n"
+///             + " │  ├─ val \"x\"\n"
+///             + " │  ├─ op \"+\"\n"
+///             + " │  └─ val \"y\"\n"
+///             + " ├─ op \"+\"\n"
+///             + " └─ val \"z\"\n"
+///     );
 /// ```
 ///
 /// [`String`]: https://doc.rust-lang.org/nightly/alloc/string/struct.String.html

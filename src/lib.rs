@@ -2,8 +2,8 @@
 //!
 //! This is a small helper crate useful for quickly debugging your pest
 //! grammar.
-//!
-//! For generating the output, [ascii_tree][1] is used.
+//! The rules found by parsing the file are formated into an
+//! [`ascii_tree`][1].
 //!
 //! It is useful, you you want to quickly debug your grammar without
 //! having to write specialized code for handling the `Pairs` iterator
@@ -28,9 +28,9 @@
 //!  └─ val "z"
 //! </pre>
 //!
-//! Note, that the `EOI` node is skipped.
+//! Please, that the `EOI` node is skipped.
 //!
-//! [1]: https://crates.io/crates/ascii_tree
+//! [1]: ../ascii_tree/index.html
 
 extern crate ascii_tree;
 extern crate escape_string;
@@ -74,13 +74,17 @@ where
     vec
 }
 
-/// Returns the generated ascii_tree as string.
+/// Formats the parsing result by pest into an ascii_tree
+/// into a [`String`].
+///
+/// # Error
+/// If the internal call to [`ascii_tree::write_tree`] failed, the error
+/// variant is passed to the caller.
 ///
 /// # Examples
 /// ```ignore
 /// let result = pest_ascii_tree::into_ascii_tree(
-///                  ExpressionParser::parse(Rule::expr,
-///                                          "(u + (v + w)) + (x + y) + z").unwrap()).unwrap();
+///                  ExpressionParser::parse(Rule::expr, "(u + (v + w)) + (x + y) + z")?)?;
 /// assert_eq!(result,
 ///            String::new() +
 ///            " expr\n" +
@@ -100,8 +104,8 @@ where
 ///            " └─ val \"z\"\n");
 /// ```
 ///
-/// # Error
-/// If the internal call to `ascii_tree::write_tree` failed, the error is passed to the caller.
+/// [`String`]: https://doc.rust-lang.org/nightly/alloc/string/struct.String.html
+/// [`ascii_tree::write_tree`]: ../ascii_tree/fn.write_tree.html
 pub fn into_ascii_tree<R>(pairs: Pairs<R>) -> Result<String, std::fmt::Error>
 where
     R: pest::RuleType,
@@ -128,11 +132,11 @@ where
     Ok(output)
 }
 
-/// Prints the result returned by your pest Parser.
+/// Prints the result returned by your pest Parser as an ascii tree.
 ///
+/// # Errors
 /// In case of an parsing error, the error is printed.
 /// In case of a formating error, the error is printed.
-/// Otherwise, an ascii tree is printed.
 ///
 /// # Examples
 /// ```ignore
@@ -206,7 +210,8 @@ mod tests {
         );
 
         let result =
-            into_ascii_tree(ExpressionParser::parse(Rule::expr_root, "x + y + z").unwrap()).unwrap();
+            into_ascii_tree(ExpressionParser::parse(Rule::expr_root, "x + y + z").unwrap())
+                .unwrap();
         assert_eq!(
             result,
             String::new()

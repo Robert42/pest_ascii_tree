@@ -75,7 +75,7 @@ where
 }
 
 /// Formats the parsing result by pest into an ascii_tree
-/// into a [`String`].
+/// stored in a [`String`].
 ///
 /// # Error
 /// If the internal call to [`ascii_tree::write_tree`] failed, the error

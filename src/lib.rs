@@ -9,6 +9,27 @@
 //! having to write specialized code for handling the `Pairs` iterator
 //! returned by your pest parser.
 //!
+//! Example, for whan an output might look like.
+//! <pre>
+//!  expr
+//!  ├─ expr
+//!  │  ├─ val "u"
+//!  │  ├─ op "+"
+//!  │  └─ expr
+//!  │     ├─ val "v"
+//!  │     ├─ op "+"
+//!  │     └─ val "w"
+//!  ├─ op "+"
+//!  ├─ expr
+//!  │  ├─ val "x"
+//!  │  ├─ op "+"
+//!  │  └─ val "y"
+//!  ├─ op "+"
+//!  └─ val "z"
+//! </pre>
+//!
+//! Note, that the `EOI` node is skipped.
+//!
 //! [1]: https://crates.io/crates/ascii_tree
 
 
@@ -185,6 +206,25 @@ mod tests {
                    " val \"m\"\n");
 
         let result = as_ascii_tree(ExpressionParser::parse(Rule::expr, "(u + (v + w)) + (x + y) + z").unwrap()).unwrap();
+        assert_eq!(result,
+                   String::new() +
+                   " expr\n" +
+                   " ├─ expr\n" +
+                   " │  ├─ val \"u\"\n" +
+                   " │  ├─ op \"+\"\n" +
+                   " │  └─ expr\n" +
+                   " │     ├─ val \"v\"\n" +
+                   " │     ├─ op \"+\"\n" +
+                   " │     └─ val \"w\"\n" +
+                   " ├─ op \"+\"\n" +
+                   " ├─ expr\n" +
+                   " │  ├─ val \"x\"\n" +
+                   " │  ├─ op \"+\"\n" +
+                   " │  └─ val \"y\"\n" +
+                   " ├─ op \"+\"\n" +
+                   " └─ val \"z\"\n");
+
+        let result = as_ascii_tree(ExpressionParser::parse(Rule::root, "(u + (v + w)) + (x + y) + z").unwrap()).unwrap();
         assert_eq!(result,
                    String::new() +
                    " expr\n" +

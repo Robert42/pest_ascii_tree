@@ -40,7 +40,7 @@ extern crate pest_derive;
 
 use pest::{error::Error, iterators::Pairs};
 
-fn as_ascii_tree_nodes<R>(mut pairs: Pairs<R>) -> Vec<ascii_tree::Tree>
+fn into_ascii_tree_nodes<R>(mut pairs: Pairs<R>) -> Vec<ascii_tree::Tree>
 where
     R: pest::RuleType,
 {
@@ -49,7 +49,7 @@ where
     while let Some(pair) = pairs.next() {
         let pair_content = pair.as_span().as_str().trim();
         let pair_rule = pair.as_rule();
-        let inner_pairs = as_ascii_tree_nodes(pair.into_inner());
+        let inner_pairs = into_ascii_tree_nodes(pair.into_inner());
 
         let rule_name = format!("{:?}", pair_rule);
         if rule_name == "EOI" {
@@ -78,7 +78,7 @@ where
 ///
 /// # Examples
 /// ```ignore
-/// let result = pest_ascii_tree::as_ascii_tree(
+/// let result = pest_ascii_tree::into_ascii_tree(
 ///                  ExpressionParser::parse(Rule::expr,
 ///                                          "(u + (v + w)) + (x + y) + z").unwrap()).unwrap();
 /// assert_eq!(result,
@@ -102,11 +102,11 @@ where
 ///
 /// # Error
 /// If the internal call to `ascii_tree::write_tree` failed, the error is passed to the caller.
-pub fn as_ascii_tree<R>(pairs: Pairs<R>) -> Result<String, std::fmt::Error>
+pub fn into_ascii_tree<R>(pairs: Pairs<R>) -> Result<String, std::fmt::Error>
 where
     R: pest::RuleType,
 {
-    let nodes = as_ascii_tree_nodes(pairs);
+    let nodes = into_ascii_tree_nodes(pairs);
 
     let mut output = String::new();
 
@@ -134,12 +134,9 @@ where
 /// In case of a formating error, the error is printed.
 /// Otherwise, an ascii tree is printed.
 ///
-/// This is a convenience function.
-/// For writing unittests, I recomment using `as_ascii_tree` instead.
-///
 /// # Examples
 /// ```ignore
-/// pest_ascii_tree::print_as_ascii_tree(
+/// pest_ascii_tree::print_into_ascii_tree(
 ///                     ExpressionParser::parse(Rule::expr,
 ///                                             "(u + (v + w)) + (x + y) + z"));
 /// ```
@@ -164,12 +161,12 @@ where
 ///  └─ val "z"
 /// </pre>
 ///
-pub fn print_as_ascii_tree<R>(parsing_result: Result<Pairs<R>, Error<R>>)
+pub fn print_into_ascii_tree<R>(parsing_result: Result<Pairs<R>, Error<R>>)
 where
     R: pest::RuleType,
 {
     match parsing_result {
-        Ok(pairs) => match as_ascii_tree(pairs) {
+        Ok(pairs) => match into_ascii_tree(pairs) {
             Ok(output) => {
                 println!("{}", output);
             }
@@ -186,7 +183,7 @@ where
 #[cfg(test)]
 mod tests {
 
-    use super::as_ascii_tree;
+    use super::into_ascii_tree;
     use pest::Parser;
 
     #[derive(Parser)]
@@ -196,7 +193,7 @@ mod tests {
     #[test]
     fn it_works() {
         let result =
-            as_ascii_tree(ExpressionParser::parse(Rule::expr, "a + b + c").unwrap()).unwrap();
+            into_ascii_tree(ExpressionParser::parse(Rule::expr, "a + b + c").unwrap()).unwrap();
         assert_eq!(
             result,
             String::new()
@@ -209,7 +206,7 @@ mod tests {
         );
 
         let result =
-            as_ascii_tree(ExpressionParser::parse(Rule::expr_root, "x + y + z").unwrap()).unwrap();
+            into_ascii_tree(ExpressionParser::parse(Rule::expr_root, "x + y + z").unwrap()).unwrap();
         assert_eq!(
             result,
             String::new()
@@ -220,10 +217,10 @@ mod tests {
                 + " └─ val \"z\"\n"
         );
 
-        let result = as_ascii_tree(ExpressionParser::parse(Rule::val, "m").unwrap()).unwrap();
+        let result = into_ascii_tree(ExpressionParser::parse(Rule::val, "m").unwrap()).unwrap();
         assert_eq!(result, String::new() + " val \"m\"\n");
 
-        let result = as_ascii_tree(
+        let result = into_ascii_tree(
             ExpressionParser::parse(Rule::expr, "(u + (v + w)) + (x + y) + z").unwrap(),
         )
         .unwrap();
@@ -247,7 +244,7 @@ mod tests {
                 + " └─ val \"z\"\n"
         );
 
-        let result = as_ascii_tree(
+        let result = into_ascii_tree(
             ExpressionParser::parse(Rule::root, "(u + (v + w)) + (x + y) + z").unwrap(),
         )
         .unwrap();
@@ -271,7 +268,7 @@ mod tests {
                 + " └─ val \"z\"\n"
         );
 
-        let result = as_ascii_tree(
+        let result = into_ascii_tree(
             ExpressionParser::parse(Rule::expr_root, "(u + (v + w)) + (x + y) + z").unwrap(),
         )
         .unwrap();

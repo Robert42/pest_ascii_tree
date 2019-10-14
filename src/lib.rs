@@ -9,29 +9,7 @@
 //! having to write specialized code for handling the `Pairs` iterator
 //! returned by your pest parser.
 //!
-//! ```ignore
-//! let result = pest_ascii_tree::as_ascii_tree(
-//!                     ExpressionParser::parse(Rule::expr,
-//!                                             "(u + (v + w)) + (x + y) + z").unwrap());
-//! assert_eq!(result,
-//!            String::new() +
-//!            " expr\n" +
-//!            " ├─ expr\n" +
-//!            " │  ├─ val \"u\"\n" +
-//!            " │  ├─ op \"+\"\n" +
-//!            " │  └─ expr\n" +
-//!            " │     ├─ val \"v\"\n" +
-//!            " │     ├─ op \"+\"\n" +
-//!            " │     └─ val \"w\"\n" +
-//!            " ├─ op \"+\"\n" +
-//!            " ├─ expr\n" +
-//!            " │  ├─ val \"x\"\n" +
-//!            " │  ├─ op \"+\"\n" +
-//!            " │  └─ val \"y\"\n" +
-//!            " ├─ op \"+\"\n" +
-//!            " └─ val \"z\"\n");
-//! ```
-//!
+//! pest_ascii_tree::print_as_ascii_tree(BookMarkupParser::parse(Rule::file, "abc"));
 //! [1]: https://crates.io/crates/ascii_tree
 
 
@@ -98,6 +76,30 @@ fn as_ascii_tree_impl<R>(pairs: Pairs<R>) -> Result<String, std::fmt::Error> whe
 ///
 /// Thought as a utility function for your tests.
 ///
+/// # Examples
+/// ```ignore
+/// let result = pest_ascii_tree::as_ascii_tree(
+///                     ExpressionParser::parse(Rule::expr,
+///                                             "(u + (v + w)) + (x + y) + z").unwrap());
+/// assert_eq!(result,
+///            String::new() +
+///            " expr\n" +
+///            " ├─ expr\n" +
+///            " │  ├─ val \"u\"\n" +
+///            " │  ├─ op \"+\"\n" +
+///            " │  └─ expr\n" +
+///            " │     ├─ val \"v\"\n" +
+///            " │     ├─ op \"+\"\n" +
+///            " │     └─ val \"w\"\n" +
+///            " ├─ op \"+\"\n" +
+///            " ├─ expr\n" +
+///            " │  ├─ val \"x\"\n" +
+///            " │  ├─ op \"+\"\n" +
+///            " │  └─ val \"y\"\n" +
+///            " ├─ op \"+\"\n" +
+///            " └─ val \"z\"\n");
+/// ```
+///
 /// # Error
 /// Returns the error as string if formating the ascii tree failed.
 pub fn as_ascii_tree<R>(pairs: Pairs<R>) -> String where
@@ -116,6 +118,33 @@ pub fn as_ascii_tree<R>(pairs: Pairs<R>) -> String where
 ///
 /// This is a convenience function.
 /// For writing unittests, I recomment using `as_ascii_tree` instead.
+///
+/// # Examples
+/// ```ignore
+///  /* Prints:
+///  expr
+///  ├─ expr
+///  │  ├─ val "u"
+///  │  ├─ op "+"
+///  │  └─ expr
+///  │     ├─ val "v"
+///  │     ├─ op "+"
+///  │     └─ val "w"
+///  ├─ op "+"
+///  ├─ expr
+///  │  ├─ val "x"
+///  │  ├─ op "+"
+///  │  └─ val "y"
+///  ├─ op "+"
+///  └─ val "z"
+///  */
+///
+/// pest_ascii_tree::print_as_ascii_tree(
+///                     ExpressionParser::parse(Rule::expr,
+///                                             "(u + (v + w)) + (x + y) + z"));
+/// ```
+///
+///
 pub fn print_as_ascii_tree<R>(parsing_result : Result<Pairs<R>, Error<R>>) where
     R: pest::RuleType {
 

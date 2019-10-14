@@ -30,6 +30,8 @@ Example, for whan an output might look like.
  └─ val "z"
 </pre>
 
-Please, that the `EOI` rule is skipped.
+Please note, that the `EOI` rule is skipped.
 
 [`ascii_tree`]: ../ascii_tree/index.html
+
+License: MIT OR Apache-2.0

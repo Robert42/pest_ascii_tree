@@ -136,7 +136,7 @@ where
 ///
 /// # Examples
 /// ```ignore
-/// pest_ascii_tree::print_into_ascii_tree(
+/// pest_ascii_tree::print_ascii_tree(
 ///                     ExpressionParser::parse(Rule::expr,
 ///                                             "(u + (v + w)) + (x + y) + z"));
 /// ```
@@ -161,7 +161,7 @@ where
 ///  └─ val "z"
 /// </pre>
 ///
-pub fn print_into_ascii_tree<R>(parsing_result: Result<Pairs<R>, Error<R>>)
+pub fn print_ascii_tree<R>(parsing_result: Result<Pairs<R>, Error<R>>)
 where
     R: pest::RuleType,
 {

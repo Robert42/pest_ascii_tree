@@ -48,7 +48,7 @@ fn as_ascii_tree_nodes<R>(mut pairs: Pairs<R>) -> Vec<ascii_tree::Tree> where
 ///
 /// # Error
 /// Returns an error, if the internal call to `ascii_tree::write_tree` failed.
-fn as_ascii_tree_impl<R>(pairs: Pairs<R>) -> Result<String, std::fmt::Error> where
+pub fn as_ascii_tree<R>(pairs: Pairs<R>) -> Result<String, std::fmt::Error> where
     R: pest::RuleType {
 
     let nodes = as_ascii_tree_nodes(pairs);
@@ -69,43 +69,6 @@ fn as_ascii_tree_impl<R>(pairs: Pairs<R>) -> Result<String, std::fmt::Error> whe
     };
 
     Ok(output)
-}
-
-/// Returns the generated ascii_tree.
-///
-/// Thought as a utility function for your tests.
-///
-/// # Examples
-/// ```ignore
-/// let result = pest_ascii_tree::as_ascii_tree(
-///                     ExpressionParser::parse(Rule::expr,
-///                                             "(u + (v + w)) + (x + y) + z").unwrap());
-/// assert_eq!(result,
-///            String::new() +
-///            " expr\n" +
-///            " ├─ expr\n" +
-///            " │  ├─ val \"u\"\n" +
-///            " │  ├─ op \"+\"\n" +
-///            " │  └─ expr\n" +
-///            " │     ├─ val \"v\"\n" +
-///            " │     ├─ op \"+\"\n" +
-///            " │     └─ val \"w\"\n" +
-///            " ├─ op \"+\"\n" +
-///            " ├─ expr\n" +
-///            " │  ├─ val \"x\"\n" +
-///            " │  ├─ op \"+\"\n" +
-///            " │  └─ val \"y\"\n" +
-///            " ├─ op \"+\"\n" +
-///            " └─ val \"z\"\n");
-/// ```
-///
-/// # Panics
-/// If formating the ascii tree failed, this function will panic.
-/// That's intentional, as this function is meant to be used for tests.
-pub fn as_ascii_tree<R>(pairs: Pairs<R>) -> String where
-    R: pest::RuleType {
-
-    as_ascii_tree_impl(pairs).expect("A formating error prevented as_ascii_tree to generate an ascii tree.")
 }
 
 /// Prints the result returned by your pest Parser.
@@ -149,7 +112,7 @@ pub fn print_as_ascii_tree<R>(parsing_result : Result<Pairs<R>, Error<R>>) where
 
     match parsing_result {
         Ok(pairs) => {
-            match as_ascii_tree_impl(pairs) {
+            match as_ascii_tree(pairs) {
                 Ok(output) => {println!("{}", output);}
                 Err(e) => {eprintln!("{}", e);}
             }
@@ -173,7 +136,7 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr, "a + b + c").unwrap());
+        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr, "a + b + c").unwrap()).unwrap();
         assert_eq!(result,
                    String::new() +
                    " expr\n" +
@@ -183,7 +146,7 @@ mod tests {
                    " ├─ op \"+\"\n" +
                    " └─ val \"c\"\n");
 
-        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr_root, "x + y + z").unwrap());
+        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr_root, "x + y + z").unwrap()).unwrap();
         assert_eq!(result,
                    String::new() +
                    " ├─ val \"x\"\n" +
@@ -192,12 +155,12 @@ mod tests {
                    " ├─ op \"+\"\n" +
                    " └─ val \"z\"\n");
 
-        let result = as_ascii_tree(ExpressionParser::parse(Rule::val, "m").unwrap());
+        let result = as_ascii_tree(ExpressionParser::parse(Rule::val, "m").unwrap()).unwrap();
         assert_eq!(result,
                    String::new() +
                    " val \"m\"\n");
 
-        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr, "(u + (v + w)) + (x + y) + z").unwrap());
+        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr, "(u + (v + w)) + (x + y) + z").unwrap()).unwrap();
         assert_eq!(result,
                    String::new() +
                    " expr\n" +
@@ -216,7 +179,7 @@ mod tests {
                    " ├─ op \"+\"\n" +
                    " └─ val \"z\"\n");
 
-        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr_root, "(u + (v + w)) + (x + y) + z").unwrap());
+        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr_root, "(u + (v + w)) + (x + y) + z").unwrap()).unwrap();
         assert_eq!(result,
                    String::new() +
                    " ├─ expr\n" +

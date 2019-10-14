@@ -44,10 +44,34 @@ fn as_ascii_tree_nodes<R>(mut pairs: Pairs<R>) -> Vec<ascii_tree::Tree> where
     vec
 }
 
-/// Returns the generated ascii_tree.
+/// Returns the generated ascii_tree as string.
+///
+/// # Examples
+/// ```ignore
+/// let result = pest_ascii_tree::as_ascii_tree(
+///                  ExpressionParser::parse(Rule::expr,
+///                                          "(u + (v + w)) + (x + y) + z").unwrap()).unwrap();
+/// assert_eq!(result,
+///            String::new() +
+///            " expr\n" +
+///            " ├─ expr\n" +
+///            " │  ├─ val \"u\"\n" +
+///            " │  ├─ op \"+\"\n" +
+///            " │  └─ expr\n" +
+///            " │     ├─ val \"v\"\n" +
+///            " │     ├─ op \"+\"\n" +
+///            " │     └─ val \"w\"\n" +
+///            " ├─ op \"+\"\n" +
+///            " ├─ expr\n" +
+///            " │  ├─ val \"x\"\n" +
+///            " │  ├─ op \"+\"\n" +
+///            " │  └─ val \"y\"\n" +
+///            " ├─ op \"+\"\n" +
+///            " └─ val \"z\"\n");
+/// ```
 ///
 /// # Error
-/// Returns an error, if the internal call to `ascii_tree::write_tree` failed.
+/// If the internal call to `ascii_tree::write_tree` failed, the error is passed to the caller.
 pub fn as_ascii_tree<R>(pairs: Pairs<R>) -> Result<String, std::fmt::Error> where
     R: pest::RuleType {
 

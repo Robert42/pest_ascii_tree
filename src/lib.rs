@@ -9,7 +9,6 @@
 //! having to write specialized code for handling the `Pairs` iterator
 //! returned by your pest parser.
 //!
-//! pest_ascii_tree::print_as_ascii_tree(BookMarkupParser::parse(Rule::file, "abc"));
 //! [1]: https://crates.io/crates/ascii_tree
 
 

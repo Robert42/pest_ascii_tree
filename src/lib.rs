@@ -120,7 +120,14 @@ pub fn as_ascii_tree<R>(pairs: Pairs<R>) -> String where
 ///
 /// # Examples
 /// ```ignore
-///  /* Prints:
+/// pest_ascii_tree::print_as_ascii_tree(
+///                     ExpressionParser::parse(Rule::expr,
+///                                             "(u + (v + w)) + (x + y) + z"));
+/// ```
+///
+/// will result in the output
+///
+/// <pre>
 ///  expr
 ///  ├─ expr
 ///  │  ├─ val "u"
@@ -136,13 +143,7 @@ pub fn as_ascii_tree<R>(pairs: Pairs<R>) -> String where
 ///  │  └─ val "y"
 ///  ├─ op "+"
 ///  └─ val "z"
-///  */
-///
-/// pest_ascii_tree::print_as_ascii_tree(
-///                     ExpressionParser::parse(Rule::expr,
-///                                             "(u + (v + w)) + (x + y) + z"));
-/// ```
-///
+/// </pre>
 ///
 pub fn print_as_ascii_tree<R>(parsing_result : Result<Pairs<R>, Error<R>>) where
     R: pest::RuleType {

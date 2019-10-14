@@ -9,6 +9,29 @@
 //! having to write specialized code for handling the `Pairs` iterator
 //! returned by your pest parser.
 //!
+//! ```ignore
+//! let result = pest_ascii_tree::as_ascii_tree(
+//!                     ExpressionParser::parse(Rule::expr,
+//!                                             "(u + (v + w)) + (x + y) + z").unwrap());
+//! assert_eq!(result,
+//!            String::new() +
+//!            " expr\n" +
+//!            " ├─ expr\n" +
+//!            " │  ├─ val \"u\"\n" +
+//!            " │  ├─ op \"+\"\n" +
+//!            " │  └─ expr\n" +
+//!            " │     ├─ val \"v\"\n" +
+//!            " │     ├─ op \"+\"\n" +
+//!            " │     └─ val \"w\"\n" +
+//!            " ├─ op \"+\"\n" +
+//!            " ├─ expr\n" +
+//!            " │  ├─ val \"x\"\n" +
+//!            " │  ├─ op \"+\"\n" +
+//!            " │  └─ val \"y\"\n" +
+//!            " ├─ op \"+\"\n" +
+//!            " └─ val \"z\"\n");
+//! ```
+//!
 //! [1]: https://crates.io/crates/ascii_tree
 
 
@@ -122,7 +145,7 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr, "a + b + c").expect("Expected expression to parse"));
+        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr, "a + b + c").unwrap());
         assert_eq!(result,
                    String::new() +
                    " expr\n" +
@@ -132,7 +155,7 @@ mod tests {
                    " ├─ op \"+\"\n" +
                    " └─ val \"c\"\n");
 
-        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr_root, "x + y + z").expect("Expected expression to parse"));
+        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr_root, "x + y + z").unwrap());
         assert_eq!(result,
                    String::new() +
                    " ├─ val \"x\"\n" +
@@ -141,12 +164,12 @@ mod tests {
                    " ├─ op \"+\"\n" +
                    " └─ val \"z\"\n");
 
-        let result = as_ascii_tree(ExpressionParser::parse(Rule::val, "m").expect("Expected expression to parse"));
+        let result = as_ascii_tree(ExpressionParser::parse(Rule::val, "m").unwrap());
         assert_eq!(result,
                    String::new() +
                    " val \"m\"\n");
 
-        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr, "(u + (v + w)) + (x + y) + z").expect("Expected expression to parse"));
+        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr, "(u + (v + w)) + (x + y) + z").unwrap());
         assert_eq!(result,
                    String::new() +
                    " expr\n" +
@@ -165,7 +188,7 @@ mod tests {
                    " ├─ op \"+\"\n" +
                    " └─ val \"z\"\n");
 
-        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr_root, "(u + (v + w)) + (x + y) + z").expect("Expected expression to parse"));
+        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr_root, "(u + (v + w)) + (x + y) + z").unwrap());
         assert_eq!(result,
                    String::new() +
                    " ├─ expr\n" +

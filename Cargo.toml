@@ -1,8 +1,13 @@
 [package]
 name = "pest_ascii_tree"
+description = "Helper crates converting the parsing result of any pest grammar into an ascii tree."
+lincense = "MIT"
 version = "0.1.0"
 authors = ["Robert Hildebrandt <robert.3dgamedev@gmail.com>"]
 edition = "2018"
+repository = "https://github.com/Robert42/pest_ascii_tree"
+readme = "README.md"
+keywords = ["pest", "ascii", "tree"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

@@ -51,12 +51,17 @@ fn as_ascii_tree_nodes<R>(mut pairs: Pairs<R>) -> Vec<ascii_tree::Tree> where
         let pair_rule = pair.as_rule();
         let inner_pairs = as_ascii_tree_nodes(pair.into_inner());
 
+        let rule_name = format!("{:?}", pair_rule);
+        if rule_name == "EOI" {
+            continue;
+        }
+
         let node;
         if inner_pairs.is_empty() {
             let leaf = vec![format!("{:?} \"{}\"", pair_rule, escape_string::escape(pair_content))];
             node = ascii_tree::Tree::Leaf(leaf);
         } else {
-            node = ascii_tree::Tree::Node(format!("{:?}", pair_rule), inner_pairs);
+            node = ascii_tree::Tree::Node(rule_name, inner_pairs);
         }
 
         vec.push(node);

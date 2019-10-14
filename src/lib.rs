@@ -112,8 +112,9 @@ pub fn as_ascii_tree<R>(pairs: Pairs<R>) -> String where
 
 /// Prints the result returned by your pest Parser.
 ///
+/// In case of an parsing error, the error is printed.
+/// In case of a formating error, the error is printed.
 /// Otherwise, an ascii tree is printed.
-/// In case of an error, the error is printed.
 ///
 /// This is a convenience function.
 /// For writing unittests, I recomment using `as_ascii_tree` instead.

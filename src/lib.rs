@@ -99,15 +99,13 @@ fn as_ascii_tree_impl<R>(pairs: Pairs<R>) -> Result<String, std::fmt::Error> whe
 ///            " └─ val \"z\"\n");
 /// ```
 ///
-/// # Error
-/// Returns the error as string if formating the ascii tree failed.
+/// # Panics
+/// If formating the ascii tree failed, this function will panic.
+/// That's intentional, as this function is meant to be used for tests.
 pub fn as_ascii_tree<R>(pairs: Pairs<R>) -> String where
     R: pest::RuleType {
 
-    match as_ascii_tree_impl(pairs) {
-        Ok(s) => s,
-        Err(e) => format!("{}", e),
-    }
+    as_ascii_tree_impl(pairs).expect("A formating error prevented as_ascii_tree to generate an ascii tree.")
 }
 
 /// Prints the result returned by your pest Parser.

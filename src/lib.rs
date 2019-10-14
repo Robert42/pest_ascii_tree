@@ -58,12 +58,12 @@ where
 
         let node;
         if inner_pairs.is_empty() {
-            let leaf = vec![format!(
+            let leaf = format!(
                 "{:?} \"{}\"",
                 pair_rule,
                 escape_string::escape(pair_content)
-            )];
-            node = ascii_tree::Tree::Leaf(leaf);
+            );
+            node = ascii_tree::Tree::Leaf(vec![leaf]);
         } else {
             node = ascii_tree::Tree::Node(rule_name, inner_pairs);
         }

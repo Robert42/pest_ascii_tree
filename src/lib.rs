@@ -3,7 +3,7 @@
 //! This is a small helper crate useful for quickly debugging your pest
 //! grammar.
 //! The rules found by parsing the file are formated into an
-//! [`ascii_tree`][1].
+//! [`ascii_tree`].
 //!
 //! It is useful, you you want to quickly debug your grammar without
 //! having to write specialized code for handling the `Pairs` iterator
@@ -28,9 +28,9 @@
 //!  └─ val "z"
 //! </pre>
 //!
-//! Please, that the `EOI` node is skipped.
+//! Please, that the `EOI` rule is skipped.
 //!
-//! [1]: ../ascii_tree/index.html
+//! [`ascii_tree`]: ../ascii_tree/index.html
 
 extern crate ascii_tree;
 extern crate escape_string;

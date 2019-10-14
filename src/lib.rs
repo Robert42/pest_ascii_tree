@@ -1,3 +1,40 @@
+//! # pest_ascii_tree
+//!
+//! This is a small helper crate useful for quickly debugging your pest
+//! grammar.
+//!
+//! For generating the output, [ascii_tree][1] is used.
+//!
+//! It is useful, you you want to quickly debug your grammar without
+//! having to write specialized code for handling the `Pairs` iterator
+//! returned by your pest parser.
+//!
+//! ```ignore
+//! let result = pest_ascii_tree::as_ascii_tree(
+//!                     ExpressionParser::parse(Rule::expr,
+//!                                             "(u + (v + w)) + (x + y) + z").unwrap());
+//! assert_eq!(result,
+//!            String::new() +
+//!            " expr\n" +
+//!            " ├─ expr\n" +
+//!            " │  ├─ val \"u\"\n" +
+//!            " │  ├─ op \"+\"\n" +
+//!            " │  └─ expr\n" +
+//!            " │     ├─ val \"v\"\n" +
+//!            " │     ├─ op \"+\"\n" +
+//!            " │     └─ val \"w\"\n" +
+//!            " ├─ op \"+\"\n" +
+//!            " ├─ expr\n" +
+//!            " │  ├─ val \"x\"\n" +
+//!            " │  ├─ op \"+\"\n" +
+//!            " │  └─ val \"y\"\n" +
+//!            " ├─ op \"+\"\n" +
+//!            " └─ val \"z\"\n");
+//! ```
+//!
+//! [1]: https://crates.io/crates/ascii_tree
+
+
 extern crate ascii_tree;
 extern crate pest;
 extern crate escape_string;
@@ -30,7 +67,11 @@ fn as_ascii_tree_nodes<R>(mut pairs: Pairs<R>) -> Vec<ascii_tree::Tree> where
     vec
 }
 
-fn as_ascii_tree<R>(pairs: Pairs<R>) -> Result<String, std::fmt::Error> where
+/// Returns the generated ascii_tree.
+///
+/// # Error
+/// Returns an error, if the internal call to `ascii_tree::write_tree` failed.
+fn as_ascii_tree_impl<R>(pairs: Pairs<R>) -> Result<String, std::fmt::Error> where
     R: pest::RuleType {
 
     let nodes = as_ascii_tree_nodes(pairs);
@@ -53,12 +94,34 @@ fn as_ascii_tree<R>(pairs: Pairs<R>) -> Result<String, std::fmt::Error> where
     Ok(output)
 }
 
+/// Returns the generated ascii_tree.
+///
+/// Thought as a utility function for your tests.
+///
+/// # Error
+/// Returns the error as string if formating the ascii tree failed.
+pub fn as_ascii_tree<R>(pairs: Pairs<R>) -> String where
+    R: pest::RuleType {
+
+    match as_ascii_tree_impl(pairs) {
+        Ok(s) => s,
+        Err(e) => format!("{}", e),
+    }
+}
+
+/// Prints the result returned by your pest Parser.
+///
+/// Otherwise, an ascii tree is printed.
+/// In case of an error, the error is printed.
+///
+/// This is a convenience function.
+/// For writing unittests, I recomment using `as_ascii_tree` instead.
 pub fn print_as_ascii_tree<R>(parsing_result : Result<Pairs<R>, Error<R>>) where
     R: pest::RuleType {
 
     match parsing_result {
         Ok(pairs) => {
-            match as_ascii_tree(pairs) {
+            match as_ascii_tree_impl(pairs) {
                 Ok(output) => {println!("{}", output);}
                 Err(e) => {eprintln!("{}", e);}
             }
@@ -82,7 +145,7 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr, "a + b + c").expect("Expected expression to parse")).expect(" Expected ascii tree to build");
+        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr, "a + b + c").unwrap());
         assert_eq!(result,
                    String::new() +
                    " expr\n" +
@@ -92,7 +155,7 @@ mod tests {
                    " ├─ op \"+\"\n" +
                    " └─ val \"c\"\n");
 
-        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr_root, "x + y + z").expect("Expected expression to parse")).expect(" Expected ascii tree to build");
+        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr_root, "x + y + z").unwrap());
         assert_eq!(result,
                    String::new() +
                    " ├─ val \"x\"\n" +
@@ -101,12 +164,12 @@ mod tests {
                    " ├─ op \"+\"\n" +
                    " └─ val \"z\"\n");
 
-        let result = as_ascii_tree(ExpressionParser::parse(Rule::val, "m").expect("Expected expression to parse")).expect(" Expected ascii tree to build");
+        let result = as_ascii_tree(ExpressionParser::parse(Rule::val, "m").unwrap());
         assert_eq!(result,
                    String::new() +
                    " val \"m\"\n");
 
-        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr, "(u + (v + w)) + (x + y) + z").expect("Expected expression to parse")).expect(" Expected ascii tree to build");
+        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr, "(u + (v + w)) + (x + y) + z").unwrap());
         assert_eq!(result,
                    String::new() +
                    " expr\n" +
@@ -125,7 +188,7 @@ mod tests {
                    " ├─ op \"+\"\n" +
                    " └─ val \"z\"\n");
 
-        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr_root, "(u + (v + w)) + (x + y) + z").expect("Expected expression to parse")).expect(" Expected ascii tree to build");
+        let result = as_ascii_tree(ExpressionParser::parse(Rule::expr_root, "(u + (v + w)) + (x + y) + z").unwrap());
         assert_eq!(result,
                    String::new() +
                    " ├─ expr\n" +

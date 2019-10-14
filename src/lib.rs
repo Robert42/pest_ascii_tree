@@ -30,7 +30,7 @@
 //!
 //! Please, that the `EOI` rule is skipped.
 //!
-//! [`ascii_tree`]: ../ascii_tree/index.html
+//! [`ascii_tree`]: https://docs.rs/ascii_tree/0.1.1/ascii_tree/index.html
 
 extern crate ascii_tree;
 extern crate escape_string;
@@ -107,7 +107,7 @@ where
 /// ```
 ///
 /// [`String`]: https://doc.rust-lang.org/nightly/alloc/string/struct.String.html
-/// [`ascii_tree::write_tree`]: ../ascii_tree/fn.write_tree.html
+/// [`ascii_tree::write_tree`]: https://docs.rs/ascii_tree/0.1.1/ascii_tree/fn.write_tree.html
 pub fn into_ascii_tree<R>(pairs: Pairs<R>) -> Result<String, std::fmt::Error>
 where
     R: pest::RuleType,
